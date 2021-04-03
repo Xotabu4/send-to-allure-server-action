@@ -1,4 +1,8 @@
 const fs = require('fs');
+const got = require('got')
+const FormData = require('form-data');
+const core = require('@actions/core');
+const github = require('@actions/github');
 
 async function compress(srcFolder, zipFilePath) {
   const archiver = require('archiver');
@@ -32,11 +36,7 @@ async function compress(srcFolder, zipFilePath) {
 }
 
 async function runAction() {
-  const got = require('got')
 
-  const FormData = require('form-data');
-  const core = require('@actions/core');
-  const github = require('@actions/github');
 
   // http://username:password@example.com/  
   const allureServerUrl = new URL(core.getInput('allure-server-url', { required: true }));
