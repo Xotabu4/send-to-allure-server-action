@@ -1,24 +1,46 @@
 # send-to-allure-server-action
 
-Compresses allure-results, sends to kochetkov-ma/allure-server , and triggers allure report generation.
+Compresses allure-results, sends to [kochetkov-ma/allure-server](https://github.com/kochetkov-ma/allure-server) , and triggers allure report generation on it. Result of this action - is URL to generated report.
 
-Works for any test project languages (java, .net, js/ts, python, etc), for any testing frameworks (junit, pytest, cucumber, mocha, jest ...) that has allure reporter configured.
+
+Works for any test project languages (java, .net, js/ts, python, etc), 
+for any testing frameworks (junit, pytest, cucumber, mocha, jest ...) 
+that has allure reporter configured.
 
 
 ## Inputs
 
-### `who-to-greet`
+### `allure-server-url`
 
-**Required** The name of the person to greet. Default `"World"`.
+**Required** Full url of your deployed allure-server
+______
+### `path`
+Use this option to group test reports. All reports with same `path` will have common allure history. Also it used as url path to access latest report. You can specify branch name here, or project name. 
+
+Default - your repo name
+______
+### `username`
+If your allure-server has basic auth enabled, specify username here
+______
+### `password`
+If your allure-server has basic auth enabled, specify password here
+______
+### `allure-results`
+Path to your allure-results folder. This folder will be sent to server. 
+
+Default - `./allure-results`
+
 
 ## Outputs
 
-### `time`
+### `report-url`
 
-The time we greeted you.
+URL of generated Allure report.
+
 
 ## Example usage
-
-uses: actions/hello-world-javascript-action@v1.1
+```yml
+uses: Xotabu4/send-to-allure-server-action@v1
 with:
-who-to-greet: 'Mona the Octocat'
+    allure-server-url: 'http://allure.iopump.ru/'
+```
