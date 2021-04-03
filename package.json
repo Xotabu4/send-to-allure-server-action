@@ -1,0 +1,16 @@
+{
+  "name": "send-to-allure-server-action",
+  "version": "1.0.0",
+  "description": "Compresses allure-results, sends to kochetkov-ma/allure-server , and triggers allure report generation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Oleksandr Khotemskyi <xotabu4@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0"
+  }
+}
