@@ -1,68 +1,94 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
+const fs = require('fs');
+
+async function compress(srcFolder, zipFilePath) {
+  const archiver = require('archiver');
+  const path = require('path')
+
+  const targetBasePath = path.dirname(zipFilePath);
+
+  if (targetBasePath === srcFolder) {
+    throw new Error('Source and target folder must be different.');
+  }
+  try {
+    await fs.promises.access(srcFolder, fs.constants.R_OK | fs.constants.W_OK);
+    await fs.promises.access(targetBasePath, fs.constants.R_OK | fs.constants.W_OK);
+  } catch (e) {
+    throw new Error(`Permission error: ${e.message}`);
+  }
+
+  const output = fs.createWriteStream(zipFilePath);
+  const zipArchive = archiver('zip', { store: true });
+
+  return new Promise((resolve, reject) => {
+    output.on('close', resolve);
+    output.on('error', (err) => {
+      reject(err);
+    });
+
+    zipArchive.pipe(output);
+    zipArchive.directory(srcFolder, false);
+    zipArchive.finalize();
+  });
+}
 
 async function runAction() {
   const got = require('got')
-  const fs = require('fs');
+
   const FormData = require('form-data');
+  const core = require('@actions/core');
+  const github = require('@actions/github');
 
-  // http://username:password@example.com/
+  // http://username:password@example.com/  
+  const allureServerUrl = new URL(core.getInput('allure-server-url', { required: true }));
+  // getInput returns empty string in case no input passed, which is fine for us
+  allureServerUrl.username = core.getInput('username')
+  allureServerUrl.password = core.getInput('password')
 
-  const baseUrl = new URL(core.getInput('allure-server-url'));
+  await compress(core.getInput('allure-results', { required: true }), './allure-results.zip')
+  core.info(`Created compressed ./allure-results.zip`)
 
-  if (!baseUrl) throw 
-  const baseUrl = new URL(`http://93.126.97.71:5001`)
-
-  const baseGot = got.extend({
-    prefixUrl: baseUrl,
+  const defaultGot = got.extend({
+    prefixUrl: allureServerUrl,
     responseType: 'json'
   });
 
   const form = new FormData();
   form.append('allureResults', fs.createReadStream('./allure-results.zip'));
-  const resultsResp = await baseGot('api/result', {
+  const resultsResp = await defaultGot('api/result', {
     method: 'POST',
     body: form,
   })
 
-  console.log(`Upload done: `, resultsResp.body)
+  core.info(`Upload done: `, resultsResp.body)
 
   const results_id = resultsResp.body.uuid
-  const reportUrl = await baseGot('api/report', {
+  const inputPath = core.getInput('path', { required: true })
+  const path = inputPath == 'DEFAULT_PATH' ? github.context.repo.repo : inputPath
+  const reportUrl = await defaultGot('api/report', {
     method: 'POST',
     json: {
-      "reportSpec": {
-        "path": [
-          "pet-store-tests-READY"
+      reportSpec: {
+        path: [
+          path
         ]
       },
-      "results": [
+      results: [
         results_id
       ],
-      "deleteResults": true
+      deleteResults: true
     }
   })
-  console.log(`Report generation done: `, reportUrl.body)
 
-  console.log(`========================================================================`)
-  console.log(`REPORT URL: `, reportUrl.body.url)
-  console.log(`========================================================================`)
+  core.info(`Report generation done: `, reportUrl.body)
+
+  core.info(`========================================================================`)
+  core.info(`REPORT URL: `, reportUrl.body.url)
+  core.info(`========================================================================`)
+
+  core.setOutput("report-url", reportUrl.body.url)
 }
 
-uploadAndGenerate().catch(err => {
-  core.setFailed(error.message);
+runAction().catch(err => {
+  core.error(err.message)
+  core.setFailed(err.message);
 })
-
-
-// try {
-//   // `who-to-greet` input defined in action metadata file
-//   const nameToGreet = core.getInput('who-to-greet');
-//   console.log(`Hello ${nameToGreet}!`);
-//   const time = (new Date()).toTimeString();
-//   core.setOutput("time", time);
-//   // Get the JSON webhook payload for the event that triggered the workflow
-//   const payload = JSON.stringify(github.context.payload, undefined, 2)
-//   console.log(`The event payload: ${payload}`);
-// } catch (error) {
-//   core.setFailed(error.message);
-// }
