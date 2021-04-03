@@ -53,7 +53,8 @@ async function runAction() {
   });
 
   const form = new FormData();
-  form.append('allureResults', fs.createReadStream('./allure-results.zip'));
+  core.info(`Uploading compressed ./allure-results.zip`)
+  form.append('allureResults', fs.createReadStream(path.resolve(__dirname, './allure-results.zip')));
   const resultsResp = await defaultGot('api/result', {
     method: 'POST',
     body: form,
@@ -64,6 +65,7 @@ async function runAction() {
   const results_id = resultsResp.body.uuid
   const inputPath = core.getInput('path', { required: true })
   const path = inputPath == 'DEFAULT_PATH' ? github.context.repo.repo : inputPath
+  core.info(`Triggering report generation for ${path}`)
   const reportUrl = await defaultGot('api/report', {
     method: 'POST',
     json: {
