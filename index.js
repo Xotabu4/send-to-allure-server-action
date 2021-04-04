@@ -7,7 +7,7 @@ const github = require('@actions/github');
 
 async function compress(srcFolder, zipFilePath) {
   const archiver = require('archiver');
-  
+
   const targetBasePath = path.dirname(zipFilePath);
 
   if (targetBasePath === srcFolder) {
@@ -60,7 +60,7 @@ async function runAction() {
     body: form,
   })
 
-  core.info(`Upload done: `, resultsResp.body)
+  core.info(`Upload done: ${resultsResp.body}`)
 
   const results_id = resultsResp.body.uuid
   const inputPath = core.getInput('path', { required: true })
@@ -81,10 +81,10 @@ async function runAction() {
     }
   })
 
-  core.info(`Report generation done: `, reportUrl.body)
+  core.info(`Report generation done: ${reportUrl.body}`)
 
   core.info(`========================================================================`)
-  core.info(`REPORT URL: `, reportUrl.body.url)
+  core.info(`REPORT URL: ${reportUrl.body.url}`)
   core.info(`========================================================================`)
 
   core.setOutput("report-url", reportUrl.body.url)
