@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path')
 const got = require('got')
 const FormData = require('form-data');
 const core = require('@actions/core');
@@ -6,8 +7,7 @@ const github = require('@actions/github');
 
 async function compress(srcFolder, zipFilePath) {
   const archiver = require('archiver');
-  const path = require('path')
-
+  
   const targetBasePath = path.dirname(zipFilePath);
 
   if (targetBasePath === srcFolder) {
@@ -21,7 +21,7 @@ async function compress(srcFolder, zipFilePath) {
   }
 
   const output = fs.createWriteStream(zipFilePath);
-  const zipArchive = archiver('zip', { store: true });
+  const zipArchive = archiver('zip');
 
   return new Promise((resolve, reject) => {
     output.on('close', resolve);
@@ -54,7 +54,7 @@ async function runAction() {
 
   const form = new FormData();
   core.info(`Uploading compressed ./allure-results.zip`)
-  form.append('allureResults', fs.createReadStream(path.resolve(__dirname, './allure-results.zip')));
+  form.append('allureResults', fs.createReadStream('allure-results.zip'));
   const resultsResp = await defaultGot('api/result', {
     method: 'POST',
     body: form,
@@ -64,14 +64,14 @@ async function runAction() {
 
   const results_id = resultsResp.body.uuid
   const inputPath = core.getInput('path', { required: true })
-  const path = inputPath == 'DEFAULT_PATH' ? github.context.repo.repo : inputPath
-  core.info(`Triggering report generation for ${path}`)
+  const allureReportPath = inputPath == 'DEFAULT_PATH' ? github.context.repo.repo : inputPath
+  core.info(`Triggering report generation for ${allureReportPath}`)
   const reportUrl = await defaultGot('api/report', {
     method: 'POST',
     json: {
       reportSpec: {
         path: [
-          path
+          allureReportPath
         ]
       },
       results: [
