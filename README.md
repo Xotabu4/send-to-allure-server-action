@@ -40,7 +40,10 @@ URL of generated Allure report.
 
 ## Example usage
 ```yml
-uses: Xotabu4/send-to-allure-server-action@v1
-with:
-    allure-server-url: 'http://allure.iopump.ru/'
+    - name: Send Results and Generate Allure Report
+      uses: Xotabu4/send-to-allure-server-action@1
+      # always() needed because we want report for failed tests as well
+      if: ${{ always() }}
+      with:
+        allure-server-url: 'http://my-allure-server.com:5001/'
 ```
