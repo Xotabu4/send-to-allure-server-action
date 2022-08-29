@@ -1,24 +1,30 @@
 name: 'send-to-allure-server-action'
 description: 'Greet someone and record the time'
 inputs:
-  allure-server-url:  
+  allure-server-url:
     description: '**Required** Full url of your deployed allure-server'
     required: true
     default: 'World'
-  path:  
+  path:
     description: 'Use this option to group test reports. All reports with same `path` will have common allure history. Also it used as url path to access latest report. You can specify branch name here, or project name. Default - your repo name'
     required: false
     default: 'DEFAULT_PATH'
-  username:  
+  username:
     description: 'If your allure-server has basic auth enabled, specify username here'
     required: false
-  password:  
+  password:
     description: 'If your allure-server has basic auth enabled, specify password here'
     required: false
-  allure-results:  
+  allure-results:
     description: 'Path to your allure-results folder. This folder will be sent to server. Default - `./allure-results`'
     required: false
     default: './allure-results'
+  build-url:
+    description: 'Build url to set in Executors section'
+    required: false
+  build-name:
+    description: 'Build name to set in Executors section'
+    required: false
 outputs:
   report-url:
     description: 'URL of generated Allure report.'
@@ -26,5 +32,5 @@ runs:
   using: 'node12'
   main: 'index.js'
 branding:
-  icon: 'file-text'  
+  icon: 'file-text'
   color: 'orange'

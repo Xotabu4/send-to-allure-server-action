@@ -38,7 +38,7 @@ async function compress(srcFolder, zipFilePath) {
 async function runAction() {
 
 
-  // http://username:password@example.com/  
+  // http://username:password@example.com/
   const allureServerUrl = new URL(core.getInput('allure-server-url', { required: true }));
   // getInput returns empty string in case no input passed, which is fine for us
   allureServerUrl.username = core.getInput('username')
@@ -64,7 +64,7 @@ async function runAction() {
 
   const results_id = resultsResp.body.uuid
   const inputPath = core.getInput('path', { required: true })
-  const allureReportPath = inputPath == 'DEFAULT_PATH' ? github.context.repo.repo : inputPath
+  const allureReportPath = inputPath === 'DEFAULT_PATH' ? github.context.repo.repo : inputPath
   core.info(`Triggering report generation for ${allureReportPath}`)
   const reportUrl = await defaultGot('api/report', {
     method: 'POST',
@@ -73,6 +73,12 @@ async function runAction() {
         path: [
           allureReportPath
         ]
+      },
+      executorInfo: {
+        name: "GitHub",
+        type: "github",
+        buildUrl: core.getInput('build-url'),
+        buildName: core.getInput('build-name')
       },
       results: [
         results_id
