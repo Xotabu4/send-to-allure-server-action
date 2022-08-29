@@ -72,13 +72,14 @@ async function runAction() {
       reportSpec: {
         path: [
           allureReportPath
-        ]
-      },
-      executorInfo: {
-        name: "GitHub",
-        type: "github",
-        buildUrl: core.getInput('build-url'),
-        buildName: core.getInput('build-name')
+        ],
+        executorInfo: {
+          reportName: "Generated",
+          name: "GitHub",
+          type: "github",
+          buildUrl: core.getInput('build-url'),
+          buildName: core.getInput('build-name')
+        }
       },
       results: [
         results_id
@@ -87,11 +88,11 @@ async function runAction() {
     }
   })
 
-  core.info(`Report generation done: ${reportUrl.body}`)
+  core.info("Report generation done")
 
-  core.info(`========================================================================`)
+  core.info("========================================================================")
   core.info(`REPORT URL: ${reportUrl.body.url}`)
-  core.info(`========================================================================`)
+  core.info("========================================================================")
 
   core.setOutput("report-url", reportUrl.body.url)
 }
