@@ -29,7 +29,7 @@ outputs:
   report-url:
     description: 'URL of generated Allure report.'
 runs:
-  using: 'node16'
+  using: 'node12'
   main: 'index.js'
 branding:
   icon: 'file-text'
