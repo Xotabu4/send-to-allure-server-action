@@ -30,7 +30,7 @@ outputs:
     description: 'URL of generated Allure report.'
 runs:
   using: 'node16'
-  main: 'index.js'
+  main: 'dist/index.js'
 branding:
   icon: 'file-text'
   color: 'orange'

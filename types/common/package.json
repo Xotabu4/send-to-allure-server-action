@@ -1,0 +1,5 @@
+{
+    "name": "common",
+    "version": "2.0.0",
+    "typings": "main.d.ts"
+  }
