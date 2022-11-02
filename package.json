@@ -10,10 +10,10 @@
   "author": "Oleksandr Khotemskyi <xotabu4@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0",
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
+    "archiver": "5.3.0",
     "form-data": "4.0.0",
-    "got": "11.8.2",
-    "archiver": "5.3.0"
+    "got": "^11.8.5"
   }
 }
