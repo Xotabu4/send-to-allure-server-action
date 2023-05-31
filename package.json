@@ -1,6 +1,6 @@
 {
   "name": "send-to-allure-server-action",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Compresses allure-results, sends to kochetkov-ma/allure-server , and triggers allure report generation",
   "main": "dist/index.js",
   "scripts": {
