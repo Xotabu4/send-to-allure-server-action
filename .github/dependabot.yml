@@ -9,5 +9,6 @@ updates:
     pull-request-branch-name:
       separator: "-"
     reviewers:
-      - "ypolishchuk-ledger"
       - "pglushchenko-ledger"
+    ignore:
+      - "@types/node"
