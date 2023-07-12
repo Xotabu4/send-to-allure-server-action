@@ -8,7 +8,7 @@ updates:
     open-pull-requests-limit: 2
     pull-request-branch-name:
       separator: "-"
-    reviewers:
-      - "pglushchenko-ledger"
     ignore:
-      - "@types/node"
+      - dependency-name: "@types/node"
+    reviewers:
+      - "LedgerHQ/vault-qaa"
