@@ -15,7 +15,7 @@ async function compress(srcFolder: string, zipFilePath: string): Promise<void> {
     await fs.promises.access(srcFolder, fs.constants.R_OK | fs.constants.W_OK);
     await fs.promises.access(
       targetBasePath,
-      fs.constants.R_OK | fs.constants.W_OK
+      fs.constants.R_OK | fs.constants.W_OK,
     );
   } catch (e) {
     if (e instanceof Error) {
@@ -41,7 +41,7 @@ async function compress(srcFolder: string, zipFilePath: string): Promise<void> {
 async function runAction() {
   // http://username:password@example.com/
   const allureServerUrl = new URL(
-    getInput("allure-server-url", { required: true })
+    getInput("allure-server-url", { required: true }),
   );
   // getInput returns empty string in case no input passed, which is fine for us
   allureServerUrl.username = getInput("username");
@@ -49,7 +49,7 @@ async function runAction() {
 
   await compress(
     getInput("allure-results", { required: true }),
-    "./allure-results.zip"
+    "./allure-results.zip",
   );
   info(`Created compressed ./allure-results.zip`);
 
@@ -68,7 +68,7 @@ async function runAction() {
     form,
     {
       headers: form.getHeaders(),
-    }
+    },
   );
 
   info(`Upload done`);
@@ -91,17 +91,17 @@ async function runAction() {
       },
       results: [results_id],
       deleteResults: true,
-    }
+    },
   );
 
   info("Report generation done");
 
   info(
-    "========================================================================"
+    "========================================================================",
   );
   info(`REPORT URL: ${generateReport.url}`);
   info(
-    "========================================================================"
+    "========================================================================",
   );
 
   setOutput("report-url", generateReport.url);
